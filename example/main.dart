@@ -24,7 +24,7 @@ class RangeSliderSample extends StatefulWidget {
 
 class _RangeSliderSampleState extends State<RangeSliderSample> {
   // List of RangeSliders to use, together with their parameters
-  List<RangeSliderData> rangeSliders;
+  List<RangeSliderData>? rangeSliders;
 
   double _lowerValue = 20.0;
   double _upperValue = 80.0;
@@ -99,7 +99,7 @@ class _RangeSliderSampleState extends State<RangeSliderSample> {
                   divisions: 5,
                   showValueIndicator: true,
                   valueIndicatorMaxDecimals: 1,
-                  onChanged: null,
+                  onChanged: (lowerValue, upperValue) {},
                 ),
               )
 
@@ -138,15 +138,19 @@ class _RangeSliderSampleState extends State<RangeSliderSample> {
   // -----------------------------------------------
   List<Widget> _buildRangeSliders() {
     List<Widget> children = <Widget>[];
-    for (int index = 0; index < rangeSliders.length; index++) {
-      children
-          .add(rangeSliders[index].build(context, (double lower, double upper) {
-        // adapt the RangeSlider lowerValue and upperValue
-        setState(() {
-          rangeSliders[index].lowerValue = lower;
-          rangeSliders[index].upperValue = upper;
-        });
-      }));
+    for (int index = 0; index < rangeSliders!.length; index++) {
+      children.add(
+        rangeSliders![index].build(
+          context,
+          (double lower, double upper) {
+            // adapt the RangeSlider lowerValue and upperValue
+            setState(() {
+              rangeSliders![index].lowerValue = lower;
+              rangeSliders![index].upperValue = upper;
+            });
+          },
+        ),
+      );
       // Add an extra padding at the bottom of each RangeSlider
       children.add(SizedBox(height: 8.0));
     }
@@ -162,37 +166,41 @@ class _RangeSliderSampleState extends State<RangeSliderSample> {
       RangeSliderData(
           min: 0.0, max: 100.0, lowerValue: 10.0, upperValue: 100.0),
       RangeSliderData(
-          min: 0.0,
-          max: 100.0,
-          lowerValue: 25.0,
-          upperValue: 75.0,
-          divisions: 20,
-          overlayColor: Colors.red[100]),
+        min: 0.0,
+        max: 100.0,
+        lowerValue: 25.0,
+        upperValue: 75.0,
+        divisions: 20,
+        overlayColor: Colors.red[100]!,
+      ),
       RangeSliderData(
-          min: 0.0,
-          max: 100.0,
-          lowerValue: 10.0,
-          upperValue: 30.0,
-          showValueIndicator: false,
-          valueIndicatorMaxDecimals: 0),
+        min: 0.0,
+        max: 100.0,
+        lowerValue: 10.0,
+        upperValue: 30.0,
+        showValueIndicator: false,
+        valueIndicatorMaxDecimals: 0,
+      ),
       RangeSliderData(
-          min: 0.0,
-          max: 100.0,
-          lowerValue: 10.0,
-          upperValue: 30.0,
-          showValueIndicator: true,
-          valueIndicatorMaxDecimals: 0,
-          activeTrackColor: Colors.red,
-          inactiveTrackColor: Colors.red[50],
-          valueIndicatorColor: Colors.green),
+        min: 0.0,
+        max: 100.0,
+        lowerValue: 10.0,
+        upperValue: 30.0,
+        showValueIndicator: true,
+        valueIndicatorMaxDecimals: 0,
+        activeTrackColor: Colors.red,
+        inactiveTrackColor: Colors.red[50]!,
+        valueIndicatorColor: Colors.green,
+      ),
       RangeSliderData(
-          min: 0.0,
-          max: 100.0,
-          lowerValue: 25.0,
-          upperValue: 75.0,
-          divisions: 20,
-          thumbColor: Colors.grey,
-          valueIndicatorColor: Colors.grey),
+        min: 0.0,
+        max: 100.0,
+        lowerValue: 25.0,
+        upperValue: 75.0,
+        divisions: 20,
+        thumbColor: Colors.grey,
+        valueIndicatorColor: Colors.grey,
+      ),
     ];
   }
 }
@@ -206,20 +214,20 @@ class _RangeSliderSampleState extends State<RangeSliderSample> {
 // customization of the RangeSliders
 // ---------------------------------------------------
 class RangeSliderData {
-  double min;
-  double max;
-  double lowerValue;
-  double upperValue;
-  int divisions;
-  bool showValueIndicator;
-  int valueIndicatorMaxDecimals;
-  bool forceValueIndicator;
-  Color overlayColor;
-  Color activeTrackColor;
-  Color inactiveTrackColor;
-  Color thumbColor;
-  Color valueIndicatorColor;
-  Color activeTickMarkColor;
+  double? min;
+  double? max;
+  double? lowerValue;
+  double? upperValue;
+  int? divisions;
+  bool? showValueIndicator;
+  int? valueIndicatorMaxDecimals;
+  bool? forceValueIndicator;
+  Color? overlayColor;
+  Color? activeTrackColor;
+  Color? inactiveTrackColor;
+  Color? thumbColor;
+  Color? valueIndicatorColor;
+  Color? activeTickMarkColor;
 
   static const Color defaultActiveTrackColor = const Color(0xFF0175c2);
   static const Color defaultInactiveTrackColor = const Color(0x3d0175c2);
@@ -249,9 +257,9 @@ class RangeSliderData {
   // of decimals, limited to the valueIndicatedMaxDecimals
   //
   String get lowerValueText =>
-      lowerValue.toStringAsFixed(valueIndicatorMaxDecimals);
+      lowerValue!.toStringAsFixed(valueIndicatorMaxDecimals!);
   String get upperValueText =>
-      upperValue.toStringAsFixed(valueIndicatorMaxDecimals);
+      upperValue!.toStringAsFixed(valueIndicatorMaxDecimals!);
 
   // Builds a RangeSlider and customizes the theme
   // based on parameters
@@ -281,18 +289,18 @@ class RangeSliderData {
                 //trackHeight: 8.0,
                 thumbColor: thumbColor,
                 valueIndicatorColor: valueIndicatorColor,
-                showValueIndicator: showValueIndicator
+                showValueIndicator: showValueIndicator!
                     ? ShowValueIndicator.always
                     : ShowValueIndicator.onlyForDiscrete,
               ),
               child: frs.RangeSlider(
-                min: min,
-                max: max,
-                lowerValue: lowerValue,
-                upperValue: upperValue,
-                divisions: divisions,
-                showValueIndicator: showValueIndicator,
-                valueIndicatorMaxDecimals: valueIndicatorMaxDecimals,
+                min: min!,
+                max: max!,
+                lowerValue: lowerValue!,
+                upperValue: upperValue!,
+                divisions: divisions!,
+                showValueIndicator: showValueIndicator!,
+                valueIndicatorMaxDecimals: valueIndicatorMaxDecimals!,
                 onChanged: (double lower, double upper) {
                   // call
                   callback(lower, upper);
